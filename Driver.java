@@ -3,15 +3,25 @@ import java.util.InputMismatchException;
 
 
 public class Driver
+/*
+main class includes methods to
+- display menu
+- list all users
+- select user by name
+- check if two people are direct friend
+- list all the relatives(parents or children) of the given user
+- add new user
+- close the program
+*/
 {
 
-  ArrayList<User> userList = new ArrayList<>();
+  ArrayList<User> userList = new ArrayList<>(); // list stored all the user's profiles
 
 
   // constructor Driver()
   public Driver()
   {
-    createTestingData();
+    createTestingData(); // method to create an array of User objects. These object could be Adult type or Dependent type
     int choice = 0;
     do
     {
@@ -32,25 +42,25 @@ public class Driver
         catch(InputMismatchException error)
         {
           choice = 0;
-          System.out.println("You must enter a number. Please try again.");
+          System.out.println("You must enter a number. Please try again."); // make sure the user enter correctly
         }
 
         switch(choice)
         {
           case 1:
-          listAllUsers();
+          listAllUsers(); // method to list all users that exist in the network. User's profiles in this program are all stored in a list call "userList"
           break;
           case 2:
-          selectUserByName();
+          selectUserByName(); // method to prompt user a name and then check if the name matches with any user's name in the userList
           break;
           case 3:
-          isDirectFriend();
+          isDirectFriend(); // method to check if two people are direct friends
           break;
           case 4:
-          listAllUserRelatives();
+          listAllUserRelatives(); // method to list parents/child of the input user
           break;
           case 5:
-          addNewUser();
+          addNewUser(); // method to add new user to the "userList"
           break;
           case 6:
           System.out.println("Bye Bye");
@@ -118,10 +128,11 @@ public class Driver
 
   }
 
+// method to display all User's profiles
 
   public void listAllUsers()
   {
-    for(User u: userList)
+    for(User u: userList) // for each User object in the "userlist"
     {
       System.out.println("  UserName: " + u.getName());
       System.out.println("  Profile Picture: " + u.getImage());
@@ -141,18 +152,18 @@ public class Driver
 
 
 
-    //method selectUserByName()
+//method selectUserByName()
     public void selectUserByName()
     {
       String inputName;
       Scanner sc = new Scanner(System.in);
       boolean exist = false;
       do {
-        System.out.println("Enter a name: ");
+        System.out.println("Enter a name: "); // ask input from the user
         inputName = sc.nextLine();
-        if (doesUserExist(inputName) == true)
+        if (doesUserExist(inputName) == true) // check if username really exist in the user list or not.
           {
-            subMenu(returnObjectUsersbyInputName(inputName));
+            subMenu(returnObjectUsersbyInputName(inputName)); //If yes, display a subMenu for other functions: displayProfile, updateUserProfile, deleteUserProfile or connectwithFriend
             exist = true;
           }
 
@@ -280,15 +291,15 @@ public class Driver
             choiceOfFriend = sc.nextLine();
             try
             {
-                  if (!(checkConnection(u, returnObjectUsersbyInputName(choiceOfFriend))))
-                      {    if ((checkIfAdult(u.getName()))&& (checkIfAdult(choiceOfFriend)))
+                  if (!(checkConnection(u, returnObjectUsersbyInputName(choiceOfFriend)))) //make sure they havent had a connection yet
+                      {    if ((checkIfAdult(u.getName()))&& (checkIfAdult(choiceOfFriend))) // make sure they are both adult OR
                             {(u.getListofFriends()).add(returnObjectUsersbyInputName(choiceOfFriend));
                               ((returnObjectUsersbyInputName(choiceOfFriend)).getListofFriends()).add(u);
                                 System.out.println("Friendship for "+ u.getName() + "was successfully established!" );
                               check = true;
                               break;
                             }
-                          else if((!(checkIfAdult(u.getName())))&& (!(checkIfAdult(choiceOfFriend))))
+                          else if((!(checkIfAdult(u.getName())))&& (!(checkIfAdult(choiceOfFriend)))) // make sure they are both children
                             {(u.getListofFriends()).add(returnObjectUsersbyInputName(choiceOfFriend));
                               ((returnObjectUsersbyInputName(choiceOfFriend)).getListofFriends()).add(u);
                                 System.out.println("Friendship for "+ u.getName() + "was successfully established!" );
@@ -297,20 +308,20 @@ public class Driver
                             }
                           else
                           {
-                            System.out.println("Adult and children cannot be friends unless aldults are parents of children!");
+                            System.out.println("Adult and children cannot be friends unless aldults are parents of children!"); // informing them if they aren't children
                             check = false;
                             break;
                           }
                       }
                   else
                   {
-                    System.out.println("They are already friends!");
+                    System.out.println("They are already friends!"); // informing them if a mutual connection is already exist
                     check = false;
                   }
               }
               catch (NullPointerException e)
               {
-                System.out.println("The name that you entered does not exist in the list of user!");
+                System.out.println("The name that you entered does not exist in the list of user!"); // sometimes they could enter name that has not existed in the network as well..
               }
 
 
@@ -328,18 +339,18 @@ public class Driver
       name1 = sc.nextLine();
       System.out.println("Enter the second username: ");
       name2= sc.nextLine();
-      if (doesUserExist(name1) && doesUserExist(name2))
+      if (doesUserExist(name1) && doesUserExist(name2)) // check if the provided names are real first
         {
           if (checkConnection(returnObjectUsersbyInputName(name1), returnObjectUsersbyInputName(name2)))
-            System.out.println("These two are direct friends");
+            System.out.println("These two are direct friends.");
           else
-          System.out.println(" ");
+          System.out.println("These are NOT friends.");
         }
       else
-      System.out.println("At least one of the provided usernames might not exist");
+      System.out.println("At least one of the provided usernames might not exist.");
     }
 
-          //method checkConnection()
+          //method checkConnection(): check if two User object exist in each other's friendlist or not
 
     public boolean checkConnection(User u1, User u2)
     {
@@ -358,7 +369,7 @@ public class Driver
         return false;
     }
 
-    //method doesUserExist()
+    //method doesUserExist() : check if User object exist in the userlist or not. Only need to provide username of the user to know
     public boolean doesUserExist(String name)
     {
       boolean exist = false;
@@ -394,11 +405,11 @@ public class Driver
       {
         System.out.println("Enter a username to check if they have relatives: ");
         input_name = sc.nextLine();
-        if (doesUserExist(input_name) == false)
+        if (doesUserExist(input_name) == false) // check if the User exist or not first
           {System.out.println("Username does not exist. Please try again");}
         else
         {
-          if (returnObjectUsersbyInputName(input_name) instanceof Adult)
+          if (returnObjectUsersbyInputName(input_name) instanceof Adult) // check if the User object is Adult type or Dependent type
           {
             if (((Adult)returnObjectUsersbyInputName(input_name)).getDependent() !=null)
               {System.out.println("Children of " + input_name +" is: ");
@@ -407,7 +418,7 @@ public class Driver
             else
             System.out.println( input_name+ " doesn't have any children!");
           }
-          else
+          else // if user is dependent
           {
             System.out.println("Parents of " + input_name + " are: ");
             System.out.println((((Dependent)returnObjectUsersbyInputName(input_name)).getParent1()).getName());
@@ -458,7 +469,8 @@ public class Driver
                sc.next();
              }
           }
-       if (age > 16)
+
+       if (age > 16) // if the User is Adult
          userList.add(new Adult(name, image, status, age));
        else
        {
@@ -472,22 +484,11 @@ public class Driver
          System.out.println("Enter the second guardian: ");
          name2 = scanner2.nextLine();
          if (doesUserExist(name1) && doesUserExist(name2) && checkIfAdult(name1) && checkIfAdult(name2))
-         {  userList.add(new Dependent(name, image, status, age, ((Adult)returnObjectUsersbyInputName(name1)), ((Adult)returnObjectUsersbyInputName(name2))));
-           ((Adult)returnObjectUsersbyInputName(name1)).setDepdendent((Dependent)(userList.get(userList.size()-1)));
+         {  userList.add(new Dependent(name, image, status, age, ((Adult)returnObjectUsersbyInputName(name1)), ((Adult)returnObjectUsersbyInputName(name2)))); // add new Dependent using the second constructor
+           ((Adult)returnObjectUsersbyInputName(name1)).setDepdendent((Dependent)(userList.get(userList.size()-1))); // update Adult's depedent variables as well
            ((Adult)returnObjectUsersbyInputName(name2)).setDepdendent((Dependent)(userList.get(userList.size()-1)));
          }
        }
-
-
-
-
-
-
-
-
-
-
-
 
     }
 

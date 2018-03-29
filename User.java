@@ -2,10 +2,11 @@ import java.util.*;
 
 public abstract class User
 {
+  //common variables between users
   private String name;
   private String image;
   private String status;
-  private ArrayList<User> listOfFriends = new ArrayList<>();
+  private ArrayList<User> listOfFriends = new ArrayList<>(); // list of friends for each user
 
   public User(String name, String image, String status)
   {

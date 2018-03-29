@@ -10,7 +10,7 @@ public class Dependent extends User
     this.setAge(age);
 
   }
-
+// second constructor for Children required two Adult object as variables
   public Dependent(String name, String image, String status, int age, Adult parent1, Adult parent2)
   {
     super(name, image, status);
