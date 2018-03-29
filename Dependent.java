@@ -35,7 +35,7 @@ public class Dependent extends User
     return parent1;
   }
 
-  public void setParent1(Adult parent1)
+  public void setParent1(Adult parent1) // can initialize Adult object by constructor or this mutator
   {
     this.parent1 = parent1;
   }
@@ -45,7 +45,7 @@ public class Dependent extends User
     return parent2;
   }
 
-  public void setParent2(Adult parent2)
+  public void setParent2(Adult parent2) // can initialize Adult object by constructor or this mutator
   {
     this.parent2 = parent2;
   }
