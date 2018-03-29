@@ -38,20 +38,20 @@ public class Driver
         switch(choice)
         {
           case 1:
-          System.out.println("List all users");
           listAllUsers();
           break;
           case 2:
-          //
+          selectUserByName();
           break;
           case 3:
-          //
+          isDirectFriend();
           break;
           case 4:
-          //
+          listAllUserRelatives();
           break;
           case 5:
-          //
+          addNewUser();
+          break;
           case 6:
           System.out.println("Bye Bye");
           break;
@@ -127,22 +127,300 @@ public class Driver
 
       }
     }
-    // end of method listAllUsers()
+
 
 
     //method selectUserByName()
+    public void selectUserByName()
+    {
+      String inputName;
+      Scanner sc = new Scanner(System.in);
+      boolean exist = false;
+      do {
+        System.out.println("Enter a name: ");
+        inputName = sc.nextLine();
+        if (doesUserExist(inputName) == true)
+          {
+            subMenu(returnObjectUsersbyInputName(inputName));
+            exist = true;
+          }
 
+        else
+          {
+            System.out.println("UserName does not exist. Please enter another name.");
+          }
+      } while (exist == false);
+
+    }
+    // create a sub menu for three methods : display, update, delete
+    public void subMenu(User u)
+    {
+      System.out.println("*******SubMenu*********");
+      int choice = 0;
+      Scanner sc = new Scanner(System.in);
+      do
+      {
+        System.out.println("1. Display user profile");
+        System.out.println("2. Update user profile" );
+        System.out.println("3. Delete user profile:");
+        System.out.println("4. Exit");
+        try
+        {
+          choice = sc.nextInt();
+
+        }
+        catch (InputMismatchException e)
+        {
+          System.out.println("Choice must be a number. Please enter again.");
+        }
+        switch(choice)
+        {
+          case 1:
+          displayProfile(u);
+          break;
+          case 2:
+          updateUserProfile(u);
+          break;
+          case 3:
+          deleteUserProfile(u);
+          System.out.println("User profile was successfully deleted.");
+          choice = 4;
+          break;
+          case 4:
+          System.out.println("Bye bye");
+          break;
+        }
+      }while(choice != 4);
+
+    }
+    //method displayProfile()
+    public void displayProfile(User u)
+    {
+      System.out.println("UserName: " + u.getName());
+      System.out.println("Profile Picture: " + u.getImage());
+      System.out.println("Status: " + u.getStatus());
+
+      if (u instanceof Dependent)
+      {
+        System.out.println("Age: " + ((Dependent)u).getAge());
+      }
+        else
+        {
+          System.out.println("Age: " + ((Adult)u).getAge());
+        }
+    }
+
+    //method updateUserProfile()
+    public void updateUserProfile(User u)
+    {
+      Scanner sc = new Scanner(System.in);
+      String name;
+      String image;
+      String status;
+      int age;
+      System.out.println("New Name: ");
+      name = sc.nextLine();
+      u.setName(name);
+      System.out.println("New Image: ");
+      image = sc.nextLine();
+      u.setImage(image);
+      System.out.println("New Status: ");
+      status = sc.nextLine();
+      u.setStatus(status);
+      System.out.println("New Age: ");
+      age = sc.nextInt();
+
+      if (u instanceof Adult)
+      {
+        ((Adult)u).setAge(age);
+      }
+      else
+      {
+        ((Dependent)u).setAge(age);
+      }
+
+    }
+
+    //method deleteUserProfile
+    public void deleteUserProfile(User u)
+    {
+      userList.remove(u);
+    }
 
     //method isDirectFriend()
+    public void isDirectFriend()
+    {
+      String name1;
+      String name2;
+      Scanner sc = new Scanner(System.in);
+      System.out.println("Enter the first username: ");
+      name1 = sc.nextLine();
+      System.out.println("Enter the second username: ");
+      name2= sc.nextLine();
+      if (doesUserExist(name1) && doesUserExist(name2))
+        {
+          if (checkConnection(returnObjectUsersbyInputName(name1), returnObjectUsersbyInputName(name2)))
+            System.out.println("These two are direct friends");
+          else
+          System.out.println(" ");
+        }
+      else
+      System.out.println("At least one of the provided usernames might not exist");
+    }
+
           //method checkConnection()
 
-          //method doesUserExist()
+    public boolean checkConnection(User u1, User u2)
+    {
+       boolean checkUserExistInFriendlist = false;
+       for (User u : u1.getListofFriends())
+       {
+        if (u.equals(u2))
+        {
+          checkUserExistInFriendlist = true;
+          break;
+        }
+      }
+      if (checkUserExistInFriendlist == true)
+        return true;
+      else
+        return false;
+    }
+
+    //method doesUserExist()
+    public boolean doesUserExist(String name)
+    {
+      boolean exist = false;
+      for (User u : userList)
+      {
+        if (name.equals(u.getName()))
+          exist = true;
+      }
+      return exist;
+    }
 
     //method returnObjectUser(String nameofUser)
+    public User returnObjectUsersbyInputName(String nameofUser)
+    {
+      for (User u : userList)
+      {
+        if (nameofUser.equals(u.getName()))
+        {
+          return u;
+        }
+      }
+      return null;
 
-    //method addNewUser()
+    }
 
     //method listUserRelatives()
+
+    public void listAllUserRelatives()
+    { listAllUsers();
+    String input_name;
+    Scanner sc = new Scanner(System.in);
+    while (true)
+      {
+        System.out.println("Enter a username to check if they have relatives: ");
+        input_name = sc.nextLine();
+        if (doesUserExist(input_name) == false)
+          {System.out.println("Username does not exist. Please try again");}
+        else
+        {
+          if (returnObjectUsersbyInputName(input_name) instanceof Adult)
+          {
+            if (((Adult)returnObjectUsersbyInputName(input_name)).getDependent() !=null)
+              {System.out.println("Children of " + input_name +" is: ");
+              System.out.println((((Adult)returnObjectUsersbyInputName(input_name)).getDependent()).getName());
+              }
+            else
+            System.out.println( input_name+ " doesn't have any children!");
+          }
+          else
+          {
+            System.out.println("Parents of " + input_name + " are: ");
+            System.out.println((((Dependent)returnObjectUsersbyInputName(input_name)).getParent1()).getName());
+            System.out.println((((Dependent)returnObjectUsersbyInputName(input_name)).getParent2()).getName());
+          }
+          break;
+        }
+      }
+
+    }
+
+
+    //method addNewUser()
+    public void addNewUser()
+    {
+      String name;
+      String image;
+      String status;
+      int age = 0;
+      Scanner sc = new Scanner(System.in);
+      while (true)
+        {System.out.println("Enter the name user wish to be called in the network: ");
+        name = sc.nextLine();
+        if (!doesUserExist(name))
+          break;
+        else
+          System.out.println("The name already existed in the network!");
+        }
+
+
+      System.out.println("Please provide link for user image: ");
+      image = sc.nextLine();
+      System.out.println("Please provide user's employment status: ");
+      status = sc.nextLine();
+
+
+      while (true)
+      {System.out.println("How old is the user?");
+      age = sc.nextInt();
+      if (age == ((int)age))
+        break;
+      else
+       System.out.println("Please enter a valid number.");
+      }
+
+      if (age > 16)
+        userList.add(new Adult(name, image, status, age));
+      else
+      {
+        System.out.println("Please specify users' parents in the list of users below: ");
+        listAllUsers();
+        String name1;
+        String name2;
+        Scanner scanner2 = new Scanner(System.in);
+        System.out.println("Enter the first guardian: ");
+        name1 = scanner2.nextLine();
+        System.out.println("Enter the second guardian: ");
+        name2 = scanner2.nextLine();
+        if (doesUserExist(name1) && doesUserExist(name2) && checkIfAdult(name1) && checkIfAdult(name2))
+        {  userList.add(new Dependent(name, image, status, age, ((Adult)returnObjectUsersbyInputName(name1)), ((Adult)returnObjectUsersbyInputName(name2))));
+          ((Adult)returnObjectUsersbyInputName(name1)).setDepdendent((Dependent)(userList.get(userList.size()-1)));
+          ((Adult)returnObjectUsersbyInputName(name2)).setDepdendent((Dependent)(userList.get(userList.size()-1)));
+        }
+      }
+
+
+    }
+
+    //method checkAdult()
+    public boolean checkIfAdult(String name)
+    {
+      boolean check = false;
+      for (User u : userList)
+      {
+        if (returnObjectUsersbyInputName(name) instanceof Adult)
+          check = true;
+        else
+          check = false;
+
+      }
+      return check;
+
+    }
+
 
 
 
