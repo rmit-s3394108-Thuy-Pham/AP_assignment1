@@ -29,4 +29,6 @@ public class Adult extends User
   {
     this.dependent = dependent;
   }
+
+
 }

@@ -87,6 +87,16 @@ public class Driver
     u[0].getListofFriends().add(u[3]);
     u[3].getListofFriends().add(u[0]);
 
+    //making some connections between parents and children
+    u[6].getListofFriends().add(u[4]);
+    u[7].getListofFriends().add(u[4]);
+    u[4].getListofFriends().add(u[6]);
+    u[4].getListofFriends().add(u[7]);
+    u[5].getListofFriends().add(u[8]);
+    u[5].getListofFriends().add(u[9]);
+    u[8].getListofFriends().add(u[5]);
+    u[9].getListofFriends().add(u[5]);
+
 
     //connect Dependents with their parents
     if (u[4] instanceof Dependent && u[6] instanceof Adult && u[7] instanceof Adult)
@@ -103,6 +113,7 @@ public class Driver
       ((Dependent)u[5]).setParent2((Adult)u[9]);
       ((Adult)u[9]).setDepdendent((Dependent)u[5]);
       ((Adult)u[8]).setDepdendent((Dependent)u[5]);
+
     }
 
   }
@@ -155,15 +166,17 @@ public class Driver
     // create a sub menu for three methods : display, update, delete
     public void subMenu(User u)
     {
-      System.out.println("*******SubMenu*********");
+
       int choice = 0;
       Scanner sc = new Scanner(System.in);
       do
       {
+        System.out.println("*******SubMenu "+ " for " + u.getName() + "*********");
         System.out.println("1. Display user profile");
         System.out.println("2. Update user profile" );
         System.out.println("3. Delete user profile:");
-        System.out.println("4. Exit");
+        System.out.println("4. Connect profile with another profile");
+        System.out.println("5. Exit");
         try
         {
           choice = sc.nextInt();
@@ -176,6 +189,9 @@ public class Driver
         switch(choice)
         {
           case 1:
+          System.out.println("-------------------------");
+          System.out.println( u.getName() +"'s Profile");
+          System.out.println("-------------------------");
           displayProfile(u);
           break;
           case 2:
@@ -184,13 +200,17 @@ public class Driver
           case 3:
           deleteUserProfile(u);
           System.out.println("User profile was successfully deleted.");
-          choice = 4;
+          choice = 5;
           break;
           case 4:
-          System.out.println("Bye bye");
+          connectwithFriend(u);
+
+          break;
+          case 5:
+          System.out.println("Bye Bye");
           break;
         }
-      }while(choice != 4);
+      }while(choice != 5);
 
     }
     //method displayProfile()
@@ -245,6 +265,57 @@ public class Driver
     public void deleteUserProfile(User u)
     {
       userList.remove(u);
+    }
+
+    //method connectwithFriend()
+    public void connectwithFriend(User u)
+    {
+      listAllUsers();
+      boolean check = false;
+      Scanner sc = new Scanner(System.in);
+      String choiceOfFriend;
+      while (check == false)
+            {
+            System.out.println("From the list of users above, choose the user that " + u.getName() + " wants to make a connection with: ");
+            choiceOfFriend = sc.nextLine();
+            try
+            {
+                  if (!(checkConnection(u, returnObjectUsersbyInputName(choiceOfFriend))))
+                      {    if ((checkIfAdult(u.getName()))&& (checkIfAdult(choiceOfFriend)))
+                            {(u.getListofFriends()).add(returnObjectUsersbyInputName(choiceOfFriend));
+                              ((returnObjectUsersbyInputName(choiceOfFriend)).getListofFriends()).add(u);
+                                System.out.println("Friendship for "+ u.getName() + "was successfully established!" );
+                              check = true;
+                              break;
+                            }
+                          else if((!(checkIfAdult(u.getName())))&& (!(checkIfAdult(choiceOfFriend))))
+                            {(u.getListofFriends()).add(returnObjectUsersbyInputName(choiceOfFriend));
+                              ((returnObjectUsersbyInputName(choiceOfFriend)).getListofFriends()).add(u);
+                                System.out.println("Friendship for "+ u.getName() + "was successfully established!" );
+                              check = true;
+                              break;
+                            }
+                          else
+                          {
+                            System.out.println("Adult and children cannot be friends unless aldults are parents of children!");
+                            check = false;
+                            break;
+                          }
+                      }
+                  else
+                  {
+                    System.out.println("They are already friends!");
+                    check = false;
+                  }
+              }
+              catch (NullPointerException e)
+              {
+                System.out.println("The name that you entered does not exist in the list of user!");
+              }
+
+
+        }
+
     }
 
     //method isDirectFriend()
@@ -371,36 +442,51 @@ public class Driver
       image = sc.nextLine();
       System.out.println("Please provide user's employment status: ");
       status = sc.nextLine();
+      boolean check = false;
+      while(check == false)
+        {
+             try
+             {
+               System.out.println("How old is the user?");
+               age = sc.nextInt();
+               check = true;
+             }
+             catch (InputMismatchException e)
+             {
+               System.out.println("Please enter a number");
+               check = false;
+               sc.next();
+             }
+          }
+       if (age > 16)
+         userList.add(new Adult(name, image, status, age));
+       else
+       {
+         System.out.println("Please specify users' parents in the list of users below: ");
+         listAllUsers();
+         String name1;
+         String name2;
+         Scanner scanner2 = new Scanner(System.in);
+         System.out.println("Enter the first guardian: ");
+         name1 = scanner2.nextLine();
+         System.out.println("Enter the second guardian: ");
+         name2 = scanner2.nextLine();
+         if (doesUserExist(name1) && doesUserExist(name2) && checkIfAdult(name1) && checkIfAdult(name2))
+         {  userList.add(new Dependent(name, image, status, age, ((Adult)returnObjectUsersbyInputName(name1)), ((Adult)returnObjectUsersbyInputName(name2))));
+           ((Adult)returnObjectUsersbyInputName(name1)).setDepdendent((Dependent)(userList.get(userList.size()-1)));
+           ((Adult)returnObjectUsersbyInputName(name2)).setDepdendent((Dependent)(userList.get(userList.size()-1)));
+         }
+       }
 
 
-      while (true)
-      {System.out.println("How old is the user?");
-      age = sc.nextInt();
-      if (age == ((int)age))
-        break;
-      else
-       System.out.println("Please enter a valid number.");
-      }
 
-      if (age > 16)
-        userList.add(new Adult(name, image, status, age));
-      else
-      {
-        System.out.println("Please specify users' parents in the list of users below: ");
-        listAllUsers();
-        String name1;
-        String name2;
-        Scanner scanner2 = new Scanner(System.in);
-        System.out.println("Enter the first guardian: ");
-        name1 = scanner2.nextLine();
-        System.out.println("Enter the second guardian: ");
-        name2 = scanner2.nextLine();
-        if (doesUserExist(name1) && doesUserExist(name2) && checkIfAdult(name1) && checkIfAdult(name2))
-        {  userList.add(new Dependent(name, image, status, age, ((Adult)returnObjectUsersbyInputName(name1)), ((Adult)returnObjectUsersbyInputName(name2))));
-          ((Adult)returnObjectUsersbyInputName(name1)).setDepdendent((Dependent)(userList.get(userList.size()-1)));
-          ((Adult)returnObjectUsersbyInputName(name2)).setDepdendent((Dependent)(userList.get(userList.size()-1)));
-        }
-      }
+
+
+
+
+
+
+
 
 
     }
