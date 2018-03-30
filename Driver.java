@@ -1,10 +1,11 @@
 import java.util.*;
 import java.util.InputMismatchException;
+/*@author Thuy Pham*/
 
 
 public class Driver
 /*
-main class includes methods to
+This Driver class includes methods to
 - display menu
 - list all users
 - select user by name
@@ -12,6 +13,10 @@ main class includes methods to
 - list all the relatives(parents or children) of the given user
 - add new user
 - close the program
+
+This class also includes a SubMenu function to display a SubMenu for each user if user was selected by name.
+
+
 */
 {
 
@@ -38,6 +43,10 @@ main class includes methods to
         try
         {
           choice = sc.nextInt();
+          if (choice !=1 && choice !=2 && choice !=3 && choice !=4 && choice !=5 && choice !=6)
+          {
+            System.out.println("Choice is out of range. Please try again.");
+          }
         }
         catch(InputMismatchException error)
         {
@@ -145,7 +154,7 @@ main class includes methods to
         {
           System.out.println("  Age: " + ((Adult)u).getAge());
         }
-      System.out.println("===================================");
+      System.out.println("-----------------------------------");
 
       }
     }
@@ -187,10 +196,15 @@ main class includes methods to
         System.out.println("2. Update user profile" );
         System.out.println("3. Delete user profile:");
         System.out.println("4. Connect profile with another profile");
-        System.out.println("5. Exit");
+        System.out.println("5. Go back to main menu");
+        System.out.println("Please enter a choice for user " + u.getName());
         try
         {
           choice = sc.nextInt();
+          if (choice!= 1 && choice !=2 && choice !=3 && choice !=4 && choice !=5)
+          {
+            System.out.println("Choice is out of range. Please enter again.");
+          }
 
         }
         catch (InputMismatchException e)
@@ -202,7 +216,7 @@ main class includes methods to
           case 1:
           System.out.println("-------------------------");
           System.out.println( u.getName() +"'s Profile");
-          System.out.println("-------------------------");
+
           displayProfile(u);
           break;
           case 2:
@@ -218,7 +232,7 @@ main class includes methods to
 
           break;
           case 5:
-          System.out.println("Bye Bye");
+          System.out.println("Exit SubMenu Successfully");
           break;
         }
       }while(choice != 5);
@@ -230,16 +244,23 @@ main class includes methods to
       System.out.println("UserName: " + u.getName());
       System.out.println("Profile Picture: " + u.getImage());
       System.out.println("Status: " + u.getStatus());
-
-      if (u instanceof Dependent)
-      {
-        System.out.println("Age: " + ((Dependent)u).getAge());
-      }
-        else
+        if (u instanceof Dependent)
         {
-          System.out.println("Age: " + ((Adult)u).getAge());
+          System.out.println("Age: " + ((Dependent)u).getAge());
         }
-    }
+          else
+          {
+            System.out.println("Age: " + ((Adult)u).getAge());
+          }
+
+      System.out.println("Friends in the network including: ");
+      for (User u1: u.getListofFriends())
+        {
+          System.out.println(u1.getName());
+        }
+        System.out.println("-------------------------");
+}
+
 
     //method updateUserProfile()
     public void updateUserProfile(User u)

@@ -1,4 +1,5 @@
 public class Dependent extends User
+/*@author Thuy Pham*/
 {
   private Adult parent1;
   private Adult parent2;

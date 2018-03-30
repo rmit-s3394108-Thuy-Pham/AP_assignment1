@@ -1,4 +1,5 @@
 public class Adult extends User
+/*@author Thuy Pham*/
 {
   private Dependent dependent;
   private int age;
