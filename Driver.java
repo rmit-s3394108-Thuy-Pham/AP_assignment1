@@ -111,11 +111,14 @@ This class also includes a SubMenu function to display a SubMenu for each user i
     u[7].getListofFriends().add(u[4]);
     u[4].getListofFriends().add(u[6]);
     u[4].getListofFriends().add(u[7]);
+    u[6].getListofFriends().add(u[7]);
+    u[7].getListofFriends().add(u[6]);
     u[5].getListofFriends().add(u[8]);
     u[5].getListofFriends().add(u[9]);
     u[8].getListofFriends().add(u[5]);
     u[9].getListofFriends().add(u[5]);
-
+    u[8].getListofFriends().add(u[9]);
+    u[9].getListofFriends().add(u[8]);
 
     //connect Dependents with their parents
     if (u[4] instanceof Dependent && u[6] instanceof Adult && u[7] instanceof Adult)
